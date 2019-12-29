@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2> {{ user.profile.user.username }}, your balance is : {{ user.profile.balance }}</h2>
+    {% if liked_projects.count > 0 %}
+    <h2>Your liked projects</h2>
+  <ul>
+    {% for project in liked_projects  %}
+        <li> <a href= {{ project.id }}> {{project.title}}</a></li>
+    {% endfor %}
+  </ul>
+    {% endif %}
+{% if products.count != 0 %}
+    <h1>Your projects</h1>
+{% for product in products.all %}
+
+<div class="row pt-3 ">
+  <div class="col-1" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+      <img src="{{ product.icon.url }}" class="img-fluid">
+    </div>
+  <div class="col-6" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+    <h2>{{product.title}}</h2>
+      <p>{{product.summary}}...</p>
+  </div>
+
+  <div class="col-3">
+    <a href="edit/{{ product.id }}">Edit</a>
+    <br>
+    <a href="delete/{{ product.id }}">Delete</a>
+  </div>
+</div>
+
+<form action="{% url 'upvote' product.id %}" method="POST" id="upvote{{ product.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="" >
+
+    </form>
+
+{% endfor %}
+{% else %}
+    <h1 style="text-align: center">You dont have any projects, lets add something!<br> <a href="create">Add project!</a></h1>
+{% endif %}
+{% endblock %}
